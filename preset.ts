@@ -4,7 +4,7 @@ export default definePreset({
   name: 'presets',
   options: {
     web: false,
-    repo: false,
+    github: true,
     public: false,
   },
   handler: async (context) => {
@@ -16,9 +16,7 @@ export default definePreset({
       )
     }
 
-    if (context.options.repo) {
-      await initializeProject(context.options.public)
-    }
+    await initializeProject(context.options.github, context.options.public)
   },
 })
 
@@ -68,7 +66,7 @@ async function installWeb(name: string) {
   })
 }
 
-async function initializeProject(publicRepo: boolean) {
+async function initializeProject(github: boolean, publicRepo: boolean) {
   await group({
     title: 'initialize repository',
     handler: async () => {
@@ -87,16 +85,32 @@ async function initializeProject(publicRepo: boolean) {
         arguments: ['commit', '-m', 'Initial Commit'],
       })
 
-      if (publicRepo) {
-        await executeCommand({
-          command: 'gh',
-          arguments: ['repo', 'create', '--public', '--source', '.', '--push'],
-        })
-      } else {
-        await executeCommand({
-          command: 'gh',
-          arguments: ['repo', 'create', '--private', '--source', '.', '--push'],
-        })
+      if (github) {
+        if (publicRepo) {
+          await executeCommand({
+            command: 'gh',
+            arguments: [
+              'repo',
+              'create',
+              '--public',
+              '--source',
+              '.',
+              '--push',
+            ],
+          })
+        } else {
+          await executeCommand({
+            command: 'gh',
+            arguments: [
+              'repo',
+              'create',
+              '--private',
+              '--source',
+              '.',
+              '--push',
+            ],
+          })
+        }
       }
     },
   })
