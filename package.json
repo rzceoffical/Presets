@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "author": "rzceoffical <ni.schuetze@outlook.com>",
+  "license": "MIT",
+  "preset": "preset.ts",
+  "devDependencies": {
+    "@preset/core": "^0.8.0",
+    "@types/node": "^18.14.0"
+  }
+}
